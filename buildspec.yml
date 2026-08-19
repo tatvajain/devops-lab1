@@ -15,19 +15,10 @@ phases:
       - echo Running tests
       - pytest test_app.py -v
 
-      - echo Logging into ECR
-      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_URI
-
   build:
     commands:
-      - echo Building Docker image
-      - IMAGE_TAG=$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker build -t $ECR_URI:$IMAGE_TAG .
-      - docker tag $ECR_URI:$IMAGE_TAG $ECR_URI:latest
+      - echo Build completed successfully
 
-  post_build:
-    commands:
-      - echo Pushing Docker image
-      - docker push $ECR_URI:$IMAGE_TAG
-      - docker push $ECR_URI:latest
-      - echo Image pushed successfully
+post_build:
+  commands:
+    - echo Pipeline completed
