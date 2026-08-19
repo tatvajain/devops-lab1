@@ -8,15 +8,25 @@ phases:
 
   pre_build:
     commands:
-      - echo "Running lint..."
+      - echo Running lint
       - flake8 app.py
-      - echo "Running unit tests..."
+
+      - echo Running tests
       - pytest test_app.py -v
+
+      - echo Logging into ECR
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_URI
 
   build:
     commands:
-      - echo "Build completed successfully"
+      - echo Building Docker image
+      - IMAGE_TAG=$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker build -t $ECR_URI:$IMAGE_TAG .
+      - docker tag $ECR_URI:$IMAGE_TAG $ECR_URI:latest
 
   post_build:
     commands:
-      - echo "All tests passed"
+      - echo Pushing Docker image
+      - docker push $ECR_URI:$IMAGE_TAG
+      - docker push $ECR_URI:latest
+      - echo Image pushed successfully
