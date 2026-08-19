@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+
+  install:
+    commands:
+      - pip install flake8 pytest
+
+  pre_build:
+    commands:
+      - echo "Running lint..."
+      - flake8 app.py
+      - echo "Running unit tests..."
+      - pytest test_app.py -v
+
+  build:
+    commands:
+      - echo "Build completed successfully"
+
+  post_build:
+    commands:
+      - echo "All tests passed"
