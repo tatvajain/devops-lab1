@@ -4,6 +4,7 @@ phases:
 
   install:
     commands:
+      - echo Installing dependencies
       - pip install flake8 pytest
 
   pre_build:
